@@ -3,9 +3,7 @@ package pl.sda.pizzaExercise.controller;
 import pl.sda.pizzaExercise.model.Ingredients;
 import pl.sda.pizzaExercise.model.Pizza;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class PizzaController {
@@ -66,6 +64,15 @@ public class PizzaController {
                 .collect(Collectors.toList());
     }
 
+    // metoda grupujące pizzę po cenie
+
+    public Map groupByPrice() {
+        return
+        Arrays.stream(Pizza.values())
+                .collect(Collectors.groupingBy(pizza -> getPizzaPrice(pizza)));
+
+    }
+
     public static void main(String[] args) {
         PizzaController pc = new PizzaController();
         System.out.println("najtańsza Pizza: " + pc.findCheapest() + " kosztuje");
@@ -75,5 +82,9 @@ public class PizzaController {
         pc.iLikeMeat().forEach(pizza -> System.out.println(pizza
                 + " " + pizza.getIngredients().size()
                 + " " + pizza.getIngredients().stream().filter(Ingredients::isMeat).count()));
+        System.out.println("grupy cennowe pizz");
+        new TreeMap<>(pc.groupByPrice())
+                .forEach((key,value)-> System.out.printf("%5.1f | %s\n",key,value));
+
     }
 }
