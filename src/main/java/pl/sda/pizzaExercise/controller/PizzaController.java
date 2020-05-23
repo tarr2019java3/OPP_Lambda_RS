@@ -105,9 +105,10 @@ public class PizzaController {
         return Arrays.stream(Pizza.values())
         .map(pizza -> String.format
          //| nazwa |  ostrość |  wege   |  cena zł   | składniki |
-                ("| %15s |  %8s  |  %10s  |  %5.2f zł | %-100s |"
+                ("| %15s | %13s | %-13s | %5.2f zł | %-100s |"
                         , pizza.equals(pizzaOfDay)? pizza.getName()+" * ":pizza.getName()
-                        ,pizza.getIngredients().stream().anyMatch(Ingredients::isSpicy)? "ostra":"łagodna"
+                        ,pizza.getIngredients()
+                                .stream().anyMatch(Ingredients::isSpicy)? "ostra":"łagodna"
                         ,pizza.getIngredients().stream().anyMatch(Ingredients::isMeat)? "mięsna":"wegetariańska"
                         , pizza.equals(pizzaOfDay)? getPizzaPrice(pizza)*0.8: getPizzaPrice(pizza)
                         ,pizza.getIngredients().stream().map(Ingredients::getName).collect(Collectors.joining(", "))
