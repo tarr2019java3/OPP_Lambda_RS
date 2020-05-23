@@ -79,6 +79,46 @@ public class PizzaController {
                 .collect(Collectors.groupingBy(pizza -> pizza.getIngredients().stream().filter(Ingredients::isSpicy).count())));
     }
 
+    public TreeMap<Integer, List<Pizza>> groupByNumberOfIngredientsGreaterThan4() {
+        return new TreeMap<Integer, List<Pizza>>(Arrays.stream(Pizza.values())
+                .filter(pizza -> pizza.getIngredients().size() > 4 && pizza.getIngredients().size() < 7)
+                .collect(Collectors.groupingBy(pizza -> pizza.getIngredients().size()))
+        );
+    }
+
+    //  - metoda zwracająca string w postaci
+
+                //  nazwa_pizzy:
+                //  cena
+                // Vege
+                // ostra
+                //  składnik1, składnik2, składnik3
+                //
+
+
+
+    //kolejne pizzę oddzielone znakiem nowej linii.
+
+
+    public  String formatedMenu(){
+        Pizza pizzaOfDay = getRandomPizza();
+        return Arrays.stream(Pizza.values())
+        .map(pizza -> String.format
+         //| nazwa |  ostrość |  wege   |  cena zł   | składniki |
+                ("| %15s |  %8s  |  %10s  |  %5.2f zł | %-100s |"
+                        , pizza.equals(pizzaOfDay)? pizza.getName()+" * ":pizza.getName()
+                        ,pizza.getIngredients().stream().anyMatch(Ingredients::isSpicy)? "ostra":"łagodna"
+                        ,pizza.getIngredients().stream().anyMatch(Ingredients::isMeat)? "mięsna":"wegetariańska"
+                        , pizza.equals(pizzaOfDay)? getPizzaPrice(pizza)*0.8: getPizzaPrice(pizza)
+                        ,pizza.getIngredients().stream().map(Ingredients::getName).collect(Collectors.joining(", "))
+                )).collect(Collectors.joining("\n"));
+    }
+
+    public Pizza getRandomPizza() {
+
+        return Pizza.values()[new Random().nextInt(Pizza.values().length)];
+
+    }
 
     public static void main(String[] args) {
         PizzaController pc = new PizzaController();
@@ -93,7 +133,14 @@ public class PizzaController {
         new TreeMap<>(pc.groupByPrice())
                 .forEach((key, value) -> System.out.printf("%5.1f | %s\n", key, value));
 
-        System.out.println("Pogrupowanie po ilośći ostrych składników: ");
+        System.out.println("Pizze pogrupowanie po ilośći ostrych składników: ");
         pc.groupByNumberOfSpiceIngredients().forEach((key,value)-> System.out.printf("%5d |%s\n",key,value));
+
+        System.out.println("Pizze pogrupowane po ilości składników, (wiecej niż 4 oraz mniej niż 7)");
+        pc.groupByNumberOfIngredientsGreaterThan4()
+                .forEach((key, value) -> System.out.printf("%5d | %s \n", key, value));
+        System.out.println("Menu: ");
+        System.out.println(pc.formatedMenu());
+        System.out.println(pc.getRandomPizza());
     }
 }
