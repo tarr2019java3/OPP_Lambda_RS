@@ -13,6 +13,13 @@ public class Main {
         emptyTask.setTaskName("empty task");
         System.out.println(emptyTask.getTaskName());
 
+        SubTask st = new SubTask();
+        st.setTaskName("Nauka OOP w Javie ");
+        st.setStartDate(LocalDate.now());
+        System.out.println(st.getTaskName());
+
+
+
 
     }
 }
